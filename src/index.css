@@ -50,7 +50,7 @@ body {
 }
 
 .box {
-  width: 42rem;
+  width: 72rem; // bytt senere
   max-width: 42rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
@@ -379,3 +379,10 @@ EMPTY STAR
 </svg>
 
 */
+
+.box {
+  padding: 10px;
+  border: 1px solid #d07b7b;
+  border-radius: 7px;
+  background-color: #b84343;
+}

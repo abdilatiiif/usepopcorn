@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import StarRating from "./StarRating.jsx";
 
+/*
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -47,13 +49,21 @@ const tempWatchedData = [
     userRating: 9,
   },
 ];
+*/
 
+const API_KEY = "48fbb5a9";
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=batman`)
+      .then((res) => res.json())
+      .then((data) => setMovies(data.Search));
+  }, []);
 
   return (
     <>
@@ -102,6 +112,7 @@ function NumResults({ movies }) {
 
 function Search() {
   const [query, setQuery] = useState("");
+
   return (
     <input
       className="search"
