@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-//import StarRating from "./StarRating.jsx";
+import StarRating from "./StarRating.jsx";
 
 /*
 const tempMovieData = [
@@ -228,12 +228,85 @@ function Movie({ movie, onSelectMovie }) {
 }
 
 function MovieDetails({ selectedId, onCloseMovie }) {
+  const [movie, setMovie] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    Genre: genre,
+    Director: director,
+    Plot: plot,
+    imdbRating,
+    Actors: actors,
+    Released: released,
+  } = movie;
+
+  console.log(title, year, released);
+
+  useEffect(() => {
+    async function getMovieDetails() {
+      setIsLoading(true);
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${API_KEY}&i=${selectedId}`
+      );
+
+      const data = await res.json();
+      console.log(data);
+      setMovie(data);
+      setIsLoading(false);
+    }
+    getMovieDetails();
+  }, [selectedId]);
+
   return (
     <div className="details">
-      <button className="btn-back" onClick={onCloseMovie}>
-        &larr;
-      </button>
-      {selectedId}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <header>
+            <button className="btn-back" onClick={onCloseMovie}>
+              &larr;
+            </button>
+            <img src={poster} alt={`poster of the ${movie.title}`} />
+            <div className="details-overview">
+              <h2>{title}</h2>
+              <p>
+                <span>⭐️</span>
+                <span>{imdbRating} imdbRating</span>
+              </p>
+              <p>
+                <span>⏳</span>
+                <span>{runtime}</span>
+              </p>
+              <p>
+                <span>🗓</span>
+                <span> Released {released}</span>
+              </p>
+              <p>
+                <span>🎭</span>
+                <span>type: {genre}</span>
+              </p>
+              <p>
+                <span>🎬</span>
+                <span>director: {director}</span>
+              </p>
+            </div>
+          </header>
+          <section>
+            <div className="rating">
+              <StarRating />
+            </div>
+            <p>
+              <em>{plot}</em>
+            </p>
+            <p>{actors}</p>
+          </section>
+        </>
+      )}
     </div>
   );
 }
