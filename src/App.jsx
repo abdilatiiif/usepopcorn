@@ -57,7 +57,7 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [query, setQuery] = useState("spider");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,6 @@ export default function App() {
   }
 
   function handleDeleteWatched(id) {
-    console.log("clicked delete", id);
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
@@ -122,6 +121,7 @@ export default function App() {
       return;
     }
 
+    handleCloseMovie();
     fetchMovies();
 
     return () => controller.abort();
@@ -313,6 +313,19 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
     return () => (document.title = `🍿usePopCorn`);
   }, [selectedId, title]);
+
+  useEffect(() => {
+    function escBtn(e) {
+      if (e.key === "Escape") {
+        onCloseMovie();
+      }
+    }
+
+    document.addEventListener("keydown", escBtn);
+
+    // clean up, events
+    return () => document.removeEventListener("keydown", escBtn);
+  }, [onCloseMovie]);
 
   return (
     <div className="details">
